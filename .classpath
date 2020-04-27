@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry excluding="com/ehsan/jwtScaffolder/config/" kind="src" path="jwtScaffolder/src/main/java"/>
+	<classpathentry kind="src" path="jwtScaffolder/src/main/java/com/ehsan/jwtScaffolder/config"/>
+	<classpathentry kind="src" path="jwtScaffolder/src/test/java"/>
+	<classpathentry kind="lib" path="jwtScaffolder/gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
