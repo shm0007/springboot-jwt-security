@@ -1,0 +1,28 @@
+Register
+localhost:8080/api/auth/register
+{
+    "name": "esn",
+    "password": "123456",
+    "email": "aa@bb.cc",
+    "role" : "ADMIN"
+}
+Response:
+{
+    "id": 1,
+    "name": "esn",
+    "email": "aa@bb.cc",
+    "password": "$2a$10$XtusnuLPeVVk5d5Q7Gv89.wE0D4g0uRL57Upb3492DBwDM8cYgk0q",
+    "role": "ADMIN"
+}
+
+Login
+localhost:8080/api/auth/login
+{
+    "name": "esn",
+    "password": "123456"
+}
+{
+    "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlc24iLCJpYXQiOjE1ODc5Nzc4ODQsImV4cCI6MTU4ODA2NDI4NH0.yqbdy8-r5mJx7Q_UeTB7vRqFfoTFpkESHup6SvKmhBuT7dQCgSEyrnt_8G7eYNVCLVTgc8opENZ566PzZRJ_tA",
+    "type": "Bearer",
+    "username": "esn"
+}
