@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class RegistrationRequest {
@@ -19,5 +20,5 @@ public class RegistrationRequest {
     private String password;
 
     @NotNull
-    private RoleEnum role;
+    private List<String> role;
 }

@@ -1,7 +1,6 @@
 package com.ehsan.jwtScaffolder.endpoint;
 
 
-import com.ehsan.jwtScaffolder.domain.User;
 import com.ehsan.jwtScaffolder.model.ErrorResponse;
 import com.ehsan.jwtScaffolder.model.LoginRequest;
 import com.ehsan.jwtScaffolder.model.RegistrationRequest;
@@ -12,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +21,7 @@ import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
-@RequestMapping(value = "/auth")
+@RequestMapping(value = "/api/auth")
 public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
