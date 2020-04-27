@@ -5,6 +5,7 @@ import com.ehsan.jwtScaffolder.domain.User;
 import com.ehsan.jwtScaffolder.model.ErrorResponse;
 import com.ehsan.jwtScaffolder.model.LoginRequest;
 import com.ehsan.jwtScaffolder.model.RegistrationRequest;
+import com.ehsan.jwtScaffolder.model.SignInResponse;
 import com.ehsan.jwtScaffolder.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +32,8 @@ public class AuthController {
     }
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody @Valid LoginRequest request){
-        UserDetails obj = userService.checkAndLoginUser(request);
-        if( obj instanceof ErrorResponse)
-            return ResponseEntity.badRequest().body(obj);
-        return ResponseEntity.ok(obj);
+        SignInResponse response = userService.checkAndLoginUser(request);
+        return ResponseEntity.ok(response);
     }
 
 }

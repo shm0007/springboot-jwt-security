@@ -2,10 +2,8 @@ package com.ehsan.jwtScaffolder.service;
 
 import com.ehsan.jwtScaffolder.Repository.UserRepository;
 import com.ehsan.jwtScaffolder.domain.User;
-import com.ehsan.jwtScaffolder.model.ErrorResponse;
-import com.ehsan.jwtScaffolder.model.LoginRequest;
-import com.ehsan.jwtScaffolder.model.RegistrationRequest;
-import com.ehsan.jwtScaffolder.model.UsersResponse;
+import com.ehsan.jwtScaffolder.model.*;
+import com.ehsan.jwtScaffolder.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +20,9 @@ public class UserServiceImpl implements  UserService{
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    JwtUtils jwtUtils;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -44,13 +45,15 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    public UserDetails checkAndLoginUser(LoginRequest req) {
+    public SignInResponse checkAndLoginUser(LoginRequest req) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.getName(), req.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return userDetails;
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+       SignInResponse response =  new SignInResponse(jwt,
+                userDetails.getUsername());
+        return response;
     }
 
 
