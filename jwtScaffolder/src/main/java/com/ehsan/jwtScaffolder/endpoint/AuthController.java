@@ -10,14 +10,18 @@ import com.ehsan.jwtScaffolder.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
@@ -45,6 +49,25 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
 
+    }
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity uploadFile(@RequestParam MultipartFile[] files) {
+        for (int i = 0; i < files.length; i++) {
+            logger.info(String.format("File name '%s' uploaded successfully.", files[i].getOriginalFilename()));
+        }
+        return ResponseEntity.ok().build();
+    }
+    @RequestMapping("/download")
+    public ResponseEntity downloadFile1(@RequestParam String fileName) throws IOException {
+
+        File file = new File(fileName);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(file.length())
+                .body(resource);
     }
 
 }
