@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import AuthService from "../services/auth.service";
 import Input from "react-validation/build/input";
 
-export default class Profile extends Component {
+export default class CreateItem extends Component {
   constructor(props) {
     super(props);
 
@@ -40,6 +40,15 @@ export default class Profile extends Component {
           {currentUser.roles &&
             currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
         </ul>
+
+        <form>
+      <h1>Hello {this.state.username}</h1>
+      <p>Enter your name:</p>
+      <input
+        type='text'
+        onChange={this.myChangeHandler}
+      />
+      </form>
       </div>
       /*
       <div>
