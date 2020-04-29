@@ -1,99 +1,174 @@
 import React, { Component } from "react";
-import AuthService from "../services/auth.service";
+import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import CheckButton from "react-validation/build/button";
+
+import UserService from "../services/user.service";
+
+const required = value => {
+  if (!value) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        This field is required!
+      </div>
+    );
+  }
+};
+
+const name = value => {
+  if (value.length < 1 || value.length > 20) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Restaurant name needed
+      </div>
+    );
+  }
+};
+
+const location = value => {
+  if (value.length < 1 || value.length > 40) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        Restaurant location needed
+      </div>
+    );
+  }
+};
 
 export default class CreateItem extends Component {
   constructor(props) {
     super(props);
+    this.handleCreate = this.handleCreate.bind(this);
+    this.onChangeLocation = this.onChangeLocation.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
 
-    this.state = {
-      currentUser: AuthService.getCurrentUser()
+    this.state = { 
+      name: "",
+      location: "",
+      successful: false,
+      message: ""
     };
   }
 
+  onChangeName(e) {
+    this.setState({
+      name: e.target.value
+    });
+  }
+
+  onChangeLocation(e) {
+    this.setState({
+      location: e.target.value
+    });
+  }
+
+  handleCreate(e) {
+    e.preventDefault();
+
+    this.setState({
+      message: "",
+      successful: false
+    });
+
+    this.form.validateAll();
+
+    if (this.checkBtn.context._errors.length === 0) {
+      
+      UserService.createItem(
+        this.state.name,
+        this.state.location
+      ).then(
+        response => {
+          this.setState({
+            message: "Restaurant created successfully",
+            successful: true
+          });
+          console.log(response);
+        },
+        error => {
+          const resMessage =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          this.setState({
+            successful: false,
+            message: resMessage
+          });
+        }
+      )
+    }
+  }
+
   render() {
-    const { currentUser } = this.state;
-
     return (
-     // <div>
-      <div className="container">
-        <header className="jumbotron">
-          <h3>
-            <strong>{currentUser.username}</strong> Profile
-          </h3>
-        </header>
-        <p>
-          <strong>Token:</strong>{" "}
-          {currentUser.token.substring(0, 20)} ...{" "}
-          {currentUser.token.substr(currentUser.token.length - 20)}
-        </p>
-        <p>
-          <strong>Id:</strong>{" "}
-          {currentUser.username}
-        </p>
-        <p>
-          <strong>Email:</strong>{" "}
-          {currentUser.email}
-        </p>
-        <strong>Authorities:</strong>
-        <ul>
-          {currentUser.roles &&
-            currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
-        </ul>
+      <div className="col-md-12">
+        <div className="card card-container">          
+          <label>Create Restaurant</label>
 
-        <form>
-      <h1>Hello {this.state.username}</h1>
-      <p>Enter your name:</p>
-      <input
-        type='text'
-        onChange={this.myChangeHandler}
-      />
-      </form>
-      </div>
-      /*
-      <div>
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
-          <Input
-            type="text"
-            className="form-control"
-            name="username"
-            //value={this.state.name}
-            //onChange={this.onChangeUsername}
-            //validations={[required, vusername]}
-          />
-        </div>
+          <Form
+            onSubmit={this.handleCreate}
+            ref={c => {
+              this.form = c;
+            }}
+          >
+            {!this.state.successful && (
+              <div>
+                <div className="form-group">
+                  <label htmlFor="name">Restaurant name</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={this.state.name}
+                    onChange={this.onChangeName}
+                    validations={[required, name]}
+                  />
+                </div>
 
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <Input
-            type="text"
-            className="form-control"
-            name="email"
-            //value={this.state.email}
-            //onChange={this.onChangeEmail}
-            //validations={[required, email]}
-          />
-        </div>
+                <div className="form-group">
+                  <label htmlFor="location">Location</label>
+                  <Input
+                    type="location"
+                    className="form-control"
+                    name="location"
+                    value={this.state.location}
+                    onChange={this.onChangeLocation}
+                    validations={[required, location]}
+                  />
+                </div>
 
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <Input
-            type="password"
-            className="form-control"
-            name="password"
-            //value={this.state.password}
-            //onChange={this.onChangePassword}
-            //validations={[required, vpassword]}
-          />
-        </div>
+                <div className="form-group">
+                  <button className="btn btn-primary btn-block">Create</button>
+                </div>
+              </div>
+            )}
 
-        <div className="form-group">
-          <button className="btn btn-primary btn-block">Sign Up</button>
+            {this.state.message && (
+              <div className="form-group">
+                <div
+                  className={
+                    this.state.successful
+                      ? "alert alert-success"
+                      : "alert alert-danger"
+                  }
+                  role="alert"
+                >
+                  {this.state.message}
+                </div>
+              </div>
+            )}
+            <CheckButton
+              style={{ display: "none" }}
+              ref={c => {
+                this.checkBtn = c;
+              }}
+            />
+          </Form>
         </div>
       </div>
-      </div>
-      */  
     );
   }
 }

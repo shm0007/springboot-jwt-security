@@ -7,34 +7,40 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
-      content: ""
+      content: [""]
     };
   }
 
   componentDidMount() {
-    UserService.getPublicContent().then(
+    UserService.getItemList().then(
       response => {
+        console.log("List of item");
+        console.log(response.data.content[0]);
         this.setState({
-          content: response.data
+          content: response.data.content
         });
       },
       error => {
         this.setState({
-          content:
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString()
+          content:[""]
         });
       }
     );
   }
 
   render() {
+    const listItems = this.state.content.map((item) =>
+      <li>{item.name}</li>
+    );
     return (
       <div className="container">
         <header className="jumbotron">
-          <h3>{this.state.content}</h3>
+          <h3>
+            <strong>Restaurant List</strong>
+          </h3>
         </header>
+
+        <ul>{listItems}</ul>
       </div>
     );
   }

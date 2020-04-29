@@ -4,6 +4,9 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+
 import AuthService from "../services/auth.service";
 
 const required = value => {
@@ -53,11 +56,13 @@ export default class Register extends Component {
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
+    this.onChangeRole = this.onChangeRole.bind(this);
 
     this.state = {
       name: "",
       email: "",
       password: "",
+      role: "",
       successful: false,
       message: ""
     };
@@ -81,6 +86,12 @@ export default class Register extends Component {
     });
   }
 
+  onChangeRole(e){
+    this.setState({
+      role: e.label
+    });
+  }
+
   handleRegister(e) {
     e.preventDefault();
 
@@ -96,11 +107,11 @@ export default class Register extends Component {
         this.state.name,
         this.state.email,
         this.state.password,
-        "ADMIN"
+        [this.state.role]
       ).then(
         response => {
           this.setState({
-            message: response.data.message,
+            message: "You have signed up successfully! Log in again to continue.",
             successful: true
           });
           console.log(response);
@@ -123,6 +134,10 @@ export default class Register extends Component {
   }
 
   render() {
+
+    const options = [ 'admin', 'owner', 'regular'];
+    const defaultOption = this.state.role;
+
     return (
       <div className="col-md-12">
         <div className="card card-container">
@@ -177,8 +192,14 @@ export default class Register extends Component {
                 </div>
 
                 <div className="form-group">
+                <Dropdown options={options} 
+                onChange={this.onChangeRole} value={defaultOption} placeholder="Select role of user"/>
+                </div>
+
+                <div className="form-group">
                   <button className="btn btn-primary btn-block">Sign Up</button>
                 </div>
+              
               </div>
             )}
 
@@ -196,12 +217,14 @@ export default class Register extends Component {
                 </div>
               </div>
             )}
+
             <CheckButton
               style={{ display: "none" }}
               ref={c => {
                 this.checkBtn = c;
               }}
             />
+
           </Form>
         </div>
       </div>

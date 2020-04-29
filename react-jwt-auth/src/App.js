@@ -12,6 +12,7 @@ import Profile from "./components/profile.component";
 import BoardUser from "./components/board-user.component";
 import BoardModerator from "./components/board-moderator.component";
 import BoardAdmin from "./components/board-admin.component";
+import CreateItem from "./components/create-item.component";
 
 class App extends Component {
   constructor(props) {
@@ -21,7 +22,8 @@ class App extends Component {
     this.state = {
       showModeratorBoard: false,
       showAdminBoard: false,
-      currentUser: undefined
+      currentUser: undefined,
+      showCreateItem: false
     };
   }
 
@@ -31,6 +33,7 @@ class App extends Component {
     if (user) {
       this.setState({
         currentUser: AuthService.getCurrentUser(),
+        showCreateItem: user.roles.includes("ROLE_OWNER")
 //        showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
 //        showAdminBoard: user.roles.includes("ROLE_ADMIN")
       });
@@ -42,7 +45,7 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+    const { currentUser, showModeratorBoard, showAdminBoard, showCreateItem } = this.state;
 
     return (
       <Router>
@@ -81,6 +84,16 @@ class App extends Component {
                   </Link>
                 </li>
               )}
+
+              {showCreateItem && (
+                <li className="nav-item">
+                  <Link to={"/create"} className="nav-link">
+                    Create
+                  </Link>
+                </li>
+              )}  
+
+              
             </div>
 
             {currentUser ? (
@@ -119,6 +132,7 @@ class App extends Component {
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/profile" component={Profile} />
+              <Route exact path="/create" component={CreateItem} />
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />

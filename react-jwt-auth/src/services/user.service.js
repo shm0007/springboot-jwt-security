@@ -1,7 +1,7 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 
-const API_URL = 'http://localhost:8080/api/test/';
+const API_URL = 'http://localhost:12345/api/';
 
 class UserService {
   getPublicContent() {
@@ -19,6 +19,18 @@ class UserService {
   getAdminBoard() {
     return axios.get(API_URL + 'admin', { headers: authHeader() });
   }
+
+  createItem(name, location){
+    return axios.post(API_URL + 'restaurant', {
+      name,
+      location
+    }, { headers: authHeader() })
+  }
+
+  getItemList() {
+    return axios.get(API_URL + 'restaurant/all', { headers: authHeader() });
+  }
+
 }
 
 export default new UserService();

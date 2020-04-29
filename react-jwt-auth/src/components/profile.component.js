@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import AuthService from "../services/auth.service";
-import Input from "react-validation/build/input";
 
 export default class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentUser: AuthService.getCurrentUser()
+      currentUser: AuthService.getCurrentUser(),
     };
   }
 
